@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.143" />
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ABNSearch API\ServiceReferenceAbnLookupRpc\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+    </None>
+    <None Update="ABNSearch API\ServiceReferenceAbnLookup\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>
