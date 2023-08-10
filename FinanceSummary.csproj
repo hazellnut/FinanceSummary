@@ -6,10 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
+    <UserSecretsId>befa720b-32fc-426b-86e2-3e5311fd7f8d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.143" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="MySql.Data" Version="8.0.33" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0" />
   </ItemGroup>

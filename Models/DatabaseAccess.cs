@@ -15,7 +15,7 @@ namespace FinanceSummary.Models
 {
     public static class DatabaseAccess
     {
-        public static string ConnectionString = "SERVER = localhost; UID=root;PASSWORD=fgt23m;Allow User Variables = TRUE;Database=mydb";
+        public static string ConnectionString;
         public static IEnumerable<Transaction> get_transactions ()
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
