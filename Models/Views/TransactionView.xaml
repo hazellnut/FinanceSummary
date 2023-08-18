@@ -24,10 +24,12 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button  Content="Add" Command="{Binding AddTransaction}"/>
                 <Button Grid.Column="1"  Content="Test" Command="{Binding TestWindow}"/>
                 <Button Grid.Column="2" Content="Business Search" Command="{Binding TestBusinessSearch}"/>
+                <Button Grid.Column="3" Content="Import CSV" Command="{Binding ImportCSV}"/>
             </Grid>
         </Grid>
     </Grid>

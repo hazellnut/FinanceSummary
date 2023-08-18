@@ -46,6 +46,25 @@ namespace FinanceSummary.Models
             }
         }
 
+        public static void bulk_add_transaction(List<Transaction> input)
+        {
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                var sql = @"INSERT INTO `transactions`
+                            (`datetime`,
+                            `amount`,
+                            `category`,
+                            `account_id`)
+                            VALUES
+                            (@Date,
+                            @Amount,
+                            @CatName,
+                            @AccountID);";
+
+                db.Execute(sql, input);
+            }
+        }
+
         public static void add_account(Account account)
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
@@ -113,7 +132,7 @@ namespace FinanceSummary.Models
         }
 
 
-        public static TransactionCategory find_company_category(string company)
+        public static TransactionCategory find_company_category(string company, string purchasetype)
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
@@ -127,9 +146,28 @@ namespace FinanceSummary.Models
                 }
                 catch
                 {
-                    MessageBox.Show("company does not yet exist!"); //need to implement
+                    //MessageBox.Show("company does not yet exist!"); //need to implement
                     //do keyword search
-                    return new TransactionCategory();
+                    TransactionCategory cat = new TransactionCategory();
+                    cat.name = "Uncategorised";
+                    switch (purchasetype)
+                    {
+                        case "Visa Purchase":
+                            cat.name = "Uncategorised";
+                            break;
+                        case "Internal Transfer":
+                            cat.name = "Transfer";
+                            break;
+                        default:
+                            if (purchasetype.Contains("Receipt"))
+                            {
+                                cat.name = "Transfer";
+                            }
+                            break;
+                    }
+                    if (company.Length < 45)
+                        add_company(company, cat);
+                    return cat;
                 }
 
             }
@@ -154,6 +192,28 @@ namespace FinanceSummary.Models
 
             }
         }
+
+        public static List<string> get_categories()
+        {
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                var sql = @"SELECT * FROM  `transaction_categories`;";
+                try
+                {
+                    List<string> accs = db.Query<string>(sql).ToList();
+                    return accs;
+                }
+                catch
+                {
+                    MessageBox.Show("Error loading categories!"); //need to implement
+                    //do keyword search
+                    return new List<string>();
+                }
+
+            }
+        }
+
+
 
 
         public static void delete_account(Account account)

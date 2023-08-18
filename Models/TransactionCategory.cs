@@ -28,7 +28,7 @@ namespace FinanceSummary.Models
 
         public TransactionCategory()
         {
-
+            Categories = DatabaseAccess.get_categories();
         }
 
 

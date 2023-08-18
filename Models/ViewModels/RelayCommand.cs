@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FinanceSummary.ViewModels
+namespace FinanceSummary.Models
 {
     internal class RelayCommand : ICommand
     {
