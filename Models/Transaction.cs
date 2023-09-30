@@ -12,13 +12,13 @@ namespace FinanceSummary.Models
 
 
 
-        public TransactionCategory Category { get; set; }
-        public string CatName
-        {
-            get { return Category.name; }
-        }
+        public string Category { get; set; }
+        //public string CatName
+        //{
+        //    get { return Category.name; }
+        //}
         public string TransactionCompany { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime datetime { get; set; }
         public double Amount { get; set; }
 
         public Account Account { get; set; }
@@ -28,6 +28,8 @@ namespace FinanceSummary.Models
             get { return Account.id; }
         }
 
+        public Company company { get; set; }
+
 
         public Transaction()
         {
@@ -35,7 +37,7 @@ namespace FinanceSummary.Models
         }
         public Transaction(Account account,string date, string TransactionString, double debit)
         {
-            Date = DateTime.Parse(date);
+            datetime = DateTime.Parse(date);
             Amount = debit;
             Account = account;
             //try

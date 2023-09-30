@@ -6,10 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
+
 using MySql.Data.MySqlClient;
 using System.Windows;
 using System.Security.Principal;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
+
 
 namespace FinanceSummary.Models
 {
@@ -18,11 +21,19 @@ namespace FinanceSummary.Models
         public static string ConnectionString;
         public static IEnumerable<Transaction> get_transactions ()
         {
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
                 var sql = @"SELECT 
-                            * from transactions";
-                List<Transaction> transactions = db.Query<Transaction>(sql).Distinct().ToList();
+                            * from transactions INNER JOIN accounts on (account_id = accounts.id)";
+
+
+                var transactions = db.Query<Transaction,Account,Transaction>(sql, (trans, acc) =>
+                {
+                    trans.Account = acc;
+                    return trans;
+
+                });
                 return transactions;
             }
         }
@@ -37,9 +48,9 @@ namespace FinanceSummary.Models
                             `category`,
                             `account_id`)
                             VALUES
-                            (@Date,
+                            (@datetime,
                             @Amount,
-                            @CatName,
+                            @Category,
                             @AccountID);";
 
                 db.Execute(sql, input);
@@ -98,6 +109,19 @@ namespace FinanceSummary.Models
             }
         }
 
+        public static void add_keyword(KeywordPair kw)
+        {
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                var sql = @"INSERT INTO `keywords` (`keyword`,`category`)
+                        VALUES
+                        (@keyword,@category);";
+
+                db.Execute(sql, kw);
+            }
+        }
+
+
         public static void add_category_list(TransactionCategory category)
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
@@ -118,7 +142,7 @@ namespace FinanceSummary.Models
 
 
 
-        public static void add_company(string company, TransactionCategory category)
+        public static void add_company(string company, string category)
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
@@ -127,12 +151,12 @@ namespace FinanceSummary.Models
                         (@company, @category);";
 
 
-                db.Execute(sql, new { company=company, category = category.name });
+                db.Execute(sql, new { company=company, category = category });
             }
         }
 
 
-        public static TransactionCategory find_company_category(string company, string purchasetype)
+        public static string find_company_category(string company, string purchasetype)
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
@@ -140,28 +164,26 @@ namespace FinanceSummary.Models
                 try
                 {
                     string result = db.Query<string>(sql, new { company = company }).First();
-                    TransactionCategory cat = new();
-                    cat.name = result;
-                    return cat;
+                    return result;
                 }
                 catch
                 {
                     //MessageBox.Show("company does not yet exist!"); //need to implement
                     //do keyword search
-                    TransactionCategory cat = new TransactionCategory();
-                    cat.name = "Uncategorised";
+                    string cat = "";
+                    cat = "Uncategorised";
                     switch (purchasetype)
                     {
                         case "Visa Purchase":
-                            cat.name = "Uncategorised";
+                            cat = "Uncategorised";
                             break;
                         case "Internal Transfer":
-                            cat.name = "Transfer";
+                            cat = "Transfer";
                             break;
                         default:
                             if (purchasetype.Contains("Receipt"))
                             {
-                                cat.name = "Transfer";
+                                cat = "Transfer";
                             }
                             break;
                     }
@@ -213,7 +235,24 @@ namespace FinanceSummary.Models
             }
         }
 
-
+        public static List<KeywordPair> get_keywords()
+        {
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                var sql = @"SELECT * FROM  `keywords`;";
+                try
+                {
+                    List<KeywordPair> kws = db.Query<KeywordPair>(sql).ToList();
+                    return kws;
+                }
+                catch
+                {
+                    MessageBox.Show("Error loading keywords!"); //need to implement
+                    //do keyword search
+                    return new List<KeywordPair>();
+                }
+            }
+        }
 
 
         public static void delete_account(Account account)

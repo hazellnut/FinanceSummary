@@ -18,7 +18,14 @@
                 <RowDefinition Height="4*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <DataGrid ItemsSource="{Binding Transactions}" Background="Black" SelectedItem="{Binding SelectedTransaction}" />
+            <DataGrid ItemsSource="{Binding Transactions}" Background="Black" SelectedItem="{Binding SelectedTransaction}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Amount" Binding="{Binding Amount}"/>
+                    <DataGridTextColumn Header="Date" Binding="{Binding datetime}"/>
+                    <DataGridTextColumn Header="Account Name" Binding="{Binding Account.name}"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Category}"/>
+                </DataGrid.Columns>
+            </DataGrid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace FinanceSummary.Models
 {
-    public class Keywords_ViewModel
+    public class Keywords_ViewModel: PrChanged
     {
+
     }
 }

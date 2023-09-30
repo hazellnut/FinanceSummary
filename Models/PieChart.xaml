@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="FinanceSummary.Models.PieChart"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FinanceSummary.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Canvas x:Name="MainCanvas">
+            <!--<Ellipse x:Name="testellipse" Fill="Gray" Width="200" Height="200" Canvas.Left="100" Canvas.Top="100"/>-->
+            <!-- Any additional layout or visual elements you want for the control -->
+            <!--<local:PieShape radius="100" starting_angle="0" angle_width="20" colour="Green"/>
+            <local:PieShape radius="100" starting_angle="20" angle_width="30" colour="Blue"/>
+            <local:PieShape radius="100" starting_angle="50" angle_width="25" colour="Yellow"/>
+            <local:PieShape radius="100" starting_angle="75" angle_width="225" colour="Green"/>
+            <local:PieShape radius="100" starting_angle="300" angle_width="15" colour="AliceBlue"/>
+            <local:PieShape radius="100" starting_angle="315" angle_width="45" colour="Beige"/>-->
+        </Canvas>
+    </Grid>
+</UserControl>

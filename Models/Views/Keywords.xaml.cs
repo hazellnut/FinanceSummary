@@ -23,6 +23,23 @@ namespace FinanceSummary.Models.Views
         public Keywords()
         {
             InitializeComponent();
+            UpdateDataGrid();
+        }
+
+
+        private void UpdateDataGrid()
+        {
+            Keyword_Datagrid.ItemsSource = DatabaseAccess.get_keywords();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Input.keywordinput kw = new();
+            if (kw.ShowDialog() == true )
+            {
+                DatabaseAccess.add_keyword(kw.keywordpair);
+            }
+            UpdateDataGrid();
         }
     }
 }

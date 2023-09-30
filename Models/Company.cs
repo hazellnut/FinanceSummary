@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace FinanceSummary.Models
 {
-    public class Summary_Viewmodel: PrChanged
+    public class Company
     {
+        public int idcompany { get; set; }
+        public string companystring { get; set; }
+        public string category { get; set; }
     }
 }

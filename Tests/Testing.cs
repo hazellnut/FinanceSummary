@@ -48,8 +48,8 @@ namespace FinanceSummary.Tests
         {
             Transaction transaction = new Transaction();
             transaction.Amount = 100.0;
-            transaction.Category = new TransactionCategory() { name = "Bills" };
-            transaction.Date = DateTime.Now;
+            transaction.Category = "Bills";
+            transaction.datetime = DateTime.Now;
             transaction.Account = new Account();
             List<Account> accs = DatabaseAccess.get_accounts();
             if (!accs.Any())

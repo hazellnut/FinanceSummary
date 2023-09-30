@@ -7,6 +7,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <DataGrid x:Name="Keyword_Datagrid">
+        
             
+        </DataGrid>
+        <Grid Grid.Row="1">
+            <Button Content="Add" Click="Button_Click"/>
+        </Grid>
     </Grid>
 </UserControl>

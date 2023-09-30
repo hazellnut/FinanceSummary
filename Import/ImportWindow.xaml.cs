@@ -99,7 +99,7 @@ namespace FinanceSummary.Import
 
                                 break;
                         }
-                        temp.Date = date;
+                        temp.datetime = date;
                         temp.Amount = credit + debit;
                         
                         
