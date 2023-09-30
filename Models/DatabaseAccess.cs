@@ -235,6 +235,28 @@ namespace FinanceSummary.Models
             }
         }
 
+
+        public static List<Company> get_companies()
+        {
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                var sql = @"SELECT * FROM  `companies`;";
+                try
+                {
+                    List<Company> comp = db.Query<Company>(sql).ToList();
+                    return comp;
+                }
+                catch
+                {
+                    MessageBox.Show("Error loading companies!");
+                    return new List<Company>();
+                }
+
+            }
+        }
+
+
+
         public static List<KeywordPair> get_keywords()
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
