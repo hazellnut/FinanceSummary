@@ -27,6 +27,7 @@ namespace FinanceSummary.Models.Views
             InitializeComponent();
 
             GetTransactions();
+            
             if (selectedDates != null)
             {
                 SummariseTransactions();
@@ -47,25 +48,29 @@ namespace FinanceSummary.Models.Views
 
         public void SummariseTransactions()
         {
+            GetTransactions();
             Summarised_Values.Clear();
             Piechart_Values.Clear();
             foreach (Transaction tr in Transactions)
             {
-                if (tr.datetime > selectedDates[0])
+                if (!(tr.Category == "Income") && !(tr.Category == "Transfer") && !(tr.Category == "Uncategorised"))
                 {
-                    if (!Piechart_Values.ContainsKey(tr.Category))
+                    if (tr.datetime > selectedDates[0])
                     {
-                        Piechart_Values.Add(tr.Category, new List<double>());
-                    }
-                    if (tr.Amount < 0)
-                    {
-                        Piechart_Values[tr.Category].Add(tr.Amount);
+                        if (!Piechart_Values.ContainsKey(tr.Category))
+                        {
+                            Piechart_Values.Add(tr.Category, new List<double>());
+                        }
+                        if (tr.Amount > 0)
+                        {
+                            Piechart_Values[tr.Category].Add(tr.Amount);
+                        }
                     }
                 }
             }
             foreach (string tr in Piechart_Values.Keys)
             {
-
+                
                 Summarised_Values.Add(tr, Piechart_Values[tr].Sum());
             }
         }
@@ -78,6 +83,12 @@ namespace FinanceSummary.Models.Views
             PieChart.Children.Clear();
             double total_amount = Summarised_Values.Values.Sum();
             double running_angle = 0;
+
+            //total_amount = 100;
+            //Summarised_Values.Clear();
+            //Summarised_Values.Add("test1", 99.8);
+            //Summarised_Values.Add("test2", 0.2);
+
             foreach (string tr in Summarised_Values.Keys)
             {
                 int keyindex = Random.Shared.Next(1, brushes.Length);
@@ -89,8 +100,8 @@ namespace FinanceSummary.Models.Views
                 ps.starting_angle = running_angle;
                 ps.angle_width = pc_value * 360;
                 running_angle += ps.angle_width;
-                ps.detailed_text = tr;
-                ps.percentage = (pc_value*100).ToString() + "%";
+                ps.detailed_text = tr + "\n Total amount: $" + Summarised_Values[tr].ToString("F1");
+                ps.percentage = (pc_value*100).ToString("F1") + "%";
                 PieChart.Children.Add(ps);
             }
             PieChart.ArrangeChildren();

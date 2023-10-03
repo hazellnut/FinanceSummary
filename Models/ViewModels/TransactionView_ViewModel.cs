@@ -17,6 +17,7 @@ namespace FinanceSummary.Models
         public ICommand TestWindow { get; set; }
         public ICommand TestBusinessSearch { get; set; }
         public ICommand ImportCSV { get; set; }
+        public ICommand Categorise { get; set; }
 
         private List<Transaction> _Transactions { get; set; }
         public List<Transaction> Transactions
@@ -31,14 +32,57 @@ namespace FinanceSummary.Models
             }
         }
 
+        private List<string> _Categories { get; set; }
+        public List<string> Categories
+        {
+            get
+            {
+                return _Categories;
+            }
+            set
+            {
+                _Categories = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private string _SelectedCategory { get; set; }
+        public string SelectedCategory
+        {
+            get
+            {
+                return _SelectedCategory;
+            }
+            set { _SelectedCategory = value; RaisePropertyChanged(); }
+        }
+
+        private List<Transaction> _SelectedTransactions { get; set; }
+        public List<Transaction> SelectedTransactions
+        {
+            get
+            {
+                return _SelectedTransactions;
+            }
+            set { _SelectedTransactions = value; RaisePropertyChanged(); }
+        }
+
+
+
         public TransactionView_ViewModel()
         {
             TestWindow = new RelayCommand(LoadWindow);
             TestBusinessSearch = new RelayCommand(BusinessSearch);
             ImportCSV = new RelayCommand(import_csv);
+            Categorise = new RelayCommand(categorise);
             Transactions = DatabaseAccess.get_transactions().ToList();
+            Categories = DatabaseAccess.get_categories().ToList();
         }
 
+
+        public async void LoadTransactions()
+        {
+            Transactions = DatabaseAccess.get_transactions().ToList();
+        }
         private async void LoadWindow(object obj)
         {
             TestWindow test = new();
@@ -87,6 +131,11 @@ namespace FinanceSummary.Models
             {
                 return NO;
             }
+        }
+
+        public async void categorise(object obj)
+        {
+
         }
     }
 }

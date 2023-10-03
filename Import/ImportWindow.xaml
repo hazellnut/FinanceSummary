@@ -11,7 +11,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <ComboBox Margin="30" x:Name="accountbox" DisplayMemberPath="name" Background="Black" Foreground="Black" />
@@ -23,6 +23,7 @@
         <TextBox  Margin ="30"  x:Name="filename" Background="White" Foreground="Black"/>
             <Button Grid.Column="1" Content="Pick File" Background="Black" Foreground="White" Click="Browse_Click"/>
         </Grid>
-        <Button Grid.Row="2" Content="Import" Click="Import_Click"/>
+        <Button Grid.Row="2" Content="Import" Click="Import_Click" Margin="20"/>
+        <Button Grid.Row="3" Content="Cancel" Margin="20" Click="Cancel_Click"/>
     </Grid>
 </Window>

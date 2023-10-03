@@ -10,7 +10,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid>
@@ -18,12 +18,15 @@
                 <RowDefinition Height="4*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <DataGrid ItemsSource="{Binding Transactions}" Background="Black" SelectedItem="{Binding SelectedTransaction}" AutoGenerateColumns="False">
+            <DataGrid x:Name="TransactionsGrid" ItemsSource="{Binding Transactions}" Background="Black" AutoGenerateColumns="False" SelectionMode="Extended">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Amount" Binding="{Binding Amount}"/>
+                    <DataGridTextColumn Header="Transaction" Binding="{Binding company.companystring }"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding Category}"/>
                     <DataGridTextColumn Header="Date" Binding="{Binding datetime}"/>
                     <DataGridTextColumn Header="Account Name" Binding="{Binding Account.name}"/>
-                    <DataGridTextColumn Header="Category" Binding="{Binding Category}"/>
+                    
+                    
                 </DataGrid.Columns>
             </DataGrid>
             <Grid Grid.Row="1">
@@ -38,6 +41,14 @@
                 <Button Grid.Column="2" Content="Business Search" Command="{Binding TestBusinessSearch}"/>
                 <Button Grid.Column="3" Content="Import CSV" Command="{Binding ImportCSV}"/>
             </Grid>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ComboBox x:Name="Cat_List" ItemsSource="{Binding Categories}" Margin="10,80" SelectedItem="{Binding SelectedCategory}"/>
+            <Button Grid.Row="1" Margin="50" Content="Categorise Selected" Click="Button_Click"/>
         </Grid>
     </Grid>
 </UserControl>

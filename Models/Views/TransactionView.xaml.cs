@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinanceSummary.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,21 @@ namespace FinanceSummary.Views
         public TransactionView()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TransactionView_ViewModel tv = this.DataContext as TransactionView_ViewModel;
+            string cat = Cat_List.SelectedValue.ToString();
+            foreach (Transaction transaction in TransactionsGrid.SelectedItems)
+            {
+
+                transaction.Category = cat;
+                transaction.company.category = cat;
+                DatabaseAccess.update_category(transaction);
+            }
+            tv.LoadTransactions();
+
         }
     }
 }

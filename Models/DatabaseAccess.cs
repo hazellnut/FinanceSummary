@@ -12,28 +12,31 @@ using System.Windows;
 using System.Security.Principal;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
-
+using System.Reflection;
+using System.Windows.Forms.PropertyGridInternal;
+using System.Xml.Linq;
 
 namespace FinanceSummary.Models
 {
     public static class DatabaseAccess
     {
         public static string ConnectionString;
-        public static IEnumerable<Transaction> get_transactions ()
+        public static IEnumerable<Transaction> get_transactions()
         {
             Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
                 var sql = @"SELECT 
-                            * from transactions INNER JOIN accounts on (account_id = accounts.id)";
+                            * from transactions INNER JOIN accounts on (account_id = accounts.id) INNER JOIN companies on (company =idcompany)";
 
 
-                var transactions = db.Query<Transaction,Account,Transaction>(sql, (trans, acc) =>
+                var transactions = db.Query<Transaction, Account, Company, Transaction>(sql, (trans, acc, comp) =>
                 {
                     trans.Account = acc;
+                    trans.company = comp;
                     return trans;
 
-                });
+                }, splitOn: "company,id");
                 return transactions;
             }
         }
@@ -61,16 +64,18 @@ namespace FinanceSummary.Models
         {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
-                var sql = @"INSERT INTO `transactions`
+                var sql = @"INSERT IGNORE INTO `transactions`
                             (`datetime`,
                             `amount`,
                             `category`,
-                            `account_id`)
+                            `account_id`,
+                            `company`)
                             VALUES
-                            (@Date,
+                            (@datetime,
                             @Amount,
-                            @CatName,
-                            @AccountID);";
+                            @Category,
+                            @AccountID,
+                            @CompanyID);";
 
                 db.Execute(sql, input);
             }
@@ -144,15 +149,18 @@ namespace FinanceSummary.Models
 
         public static void add_company(string company, string category)
         {
-            using (IDbConnection db = new MySqlConnection(ConnectionString))
-            {
-                var sql = @"INSERT INTO `companies` (`companystring`,`category`)
-                        VALUES
-                        (@company, @category);";
+            add_single<Company>(new Company() { companystring = company, category = category }, "companies");
 
 
-                db.Execute(sql, new { company=company, category = category });
-            }
+            //using (IDbConnection db = new MySqlConnection(ConnectionString))
+            //{
+            //    var sql = @"INSERT INTO `companies` (`companystring`,`category`)
+            //            VALUES
+            //            (@company, @category);";
+
+
+            //    db.Execute(sql, new { company = company, category = category });
+            //}
         }
 
 
@@ -187,13 +195,52 @@ namespace FinanceSummary.Models
                             }
                             break;
                     }
-                    if (company.Length < 45)
-                        add_company(company, cat);
+                    if (company.Length < 255)
+                        add_company(company.Trim('\"'), cat);
                     return cat;
                 }
 
             }
         }
+
+        public static Company find_company(string company)
+        {
+           
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                try
+                {
+                    var sql = @"SELECT * FROM  (`companies`) WHERE (`companystring` = @company);";
+                    var result = db.Query<Company>(sql, new { company = company.Trim('\"') }).First();
+                    return result;
+                }
+                catch
+                {
+                    Console.WriteLine("too long!");
+                    return new Company();
+                }
+            }
+        }
+
+        public static void update_category(Transaction tr)
+        {
+            using (IDbConnection db = new MySqlConnection(ConnectionString))
+            {
+                //try
+                //{
+                    var sql = @"UPDATE `transactions` SET `category` = @Category WHERE (`company` = @CompanyID);";
+                    var companysql = @"UPDATE `companies` SET `category` = @category WHERE (`idcompany` = @idcompany);";
+                    db.Execute(companysql, tr.company);
+                    db.Execute(sql, tr);
+                    
+                //}
+                //catch
+                //{
+                //    Console.WriteLine("Some issue");
+                //}
+            }
+        }
+
 
         public static List<Account> get_accounts()
         {
@@ -217,24 +264,75 @@ namespace FinanceSummary.Models
 
         public static List<string> get_categories()
         {
+            return get_all<string>("transaction_categories");
+
+            //using (IDbConnection db = new MySqlConnection(ConnectionString))
+            //{
+            //    var sql = @"SELECT * FROM  `transaction_categories`;";
+            //    try
+            //    {
+            //        List<string> accs = db.Query<string>(sql).ToList();
+            //        return accs;
+            //    }
+            //    catch
+            //    {
+            //        MessageBox.Show("Error loading categories!"); //need to implement
+            //        //do keyword search
+            //        return new List<string>();
+            //    }
+
+            //}
+        }
+
+
+        public static List<T> get_all<T>(string table)
+        {
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
-                var sql = @"SELECT * FROM  `transaction_categories`;";
+                var sql = @"SELECT * FROM  " + table + ";";
                 try
                 {
-                    List<string> accs = db.Query<string>(sql).ToList();
-                    return accs;
+                    List<T> items = db.Query<T>(sql).ToList();
+                    return items;
                 }
                 catch
                 {
                     MessageBox.Show("Error loading categories!"); //need to implement
-                    //do keyword search
-                    return new List<string>();
+                                                                  //do keyword search
+                    return new List<T>();
                 }
-
             }
         }
 
+
+        public static void add_single<T>(T dbobject, string table)
+        {
+            try
+            {
+                using (IDbConnection db = new MySqlConnection(ConnectionString))
+                {
+
+                    PropertyInfo[] pis = dbobject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                    List<string> props = new();
+                    var endstr = " VALUES (";
+                    var sql = @"INSERT INTO `" + table + "` (";
+                    foreach (PropertyInfo pi in pis)
+                    {
+                        sql += "`" + pi.Name + "`,";
+                        endstr += "@" + pi.Name + ",";
+                    }
+                    sql = sql.Remove(sql.Length - 1, 1);
+                    endstr = endstr.Remove(endstr.Length - 1, 1);
+                    sql += ") " + endstr + ");";
+
+                    db.Execute(sql, dbobject);
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Duplicate entry");
+            }
+        }
 
         public static List<Company> get_companies()
         {

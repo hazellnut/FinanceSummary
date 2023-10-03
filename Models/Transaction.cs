@@ -11,7 +11,7 @@ namespace FinanceSummary.Models
         //this holds the data for an individual transaction
 
 
-
+        public int id { get; set; }
         public string Category { get; set; }
         //public string CatName
         //{
@@ -27,7 +27,10 @@ namespace FinanceSummary.Models
         {
             get { return Account.id; }
         }
-
+        public int CompanyID
+        {
+            get { return company.idcompany; }
+        }
         public Company company { get; set; }
 
 

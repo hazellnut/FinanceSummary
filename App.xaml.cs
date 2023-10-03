@@ -37,8 +37,6 @@ namespace FinanceSummary
             window.Show();
 
             base.OnStartup(e);
-
-
             
 
             

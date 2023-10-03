@@ -10,12 +10,12 @@
         <Canvas x:Name="MainCanvas">
             <!--<Ellipse x:Name="testellipse" Fill="Gray" Width="200" Height="200" Canvas.Left="100" Canvas.Top="100"/>-->
             <!-- Any additional layout or visual elements you want for the control -->
-            <!--<local:PieShape radius="100" starting_angle="0" angle_width="20" colour="Green"/>
-            <local:PieShape radius="100" starting_angle="20" angle_width="30" colour="Blue"/>
-            <local:PieShape radius="100" starting_angle="50" angle_width="25" colour="Yellow"/>
-            <local:PieShape radius="100" starting_angle="75" angle_width="225" colour="Green"/>
-            <local:PieShape radius="100" starting_angle="300" angle_width="15" colour="AliceBlue"/>
-            <local:PieShape radius="100" starting_angle="315" angle_width="45" colour="Beige"/>-->
+            <!--<local:PieShape radius="100" starting_angle="0" angle_width="359" colour="Green" percentage="99" detailed_text="test1"/>
+            <local:PieShape radius="100" starting_angle="359" angle_width="1" colour="Blue" percentage="1" detailed_text="test2"/>-->
+            <!--<local:PieShape radius="100" starting_angle="50" angle_width="25" colour="Yellow" percentage="99" detailed_text="test1"/>
+            <local:PieShape radius="100" starting_angle="75" angle_width="340" colour="Green" percentage="99" detailed_text="test1"/>
+            <local:PieShape radius="100" starting_angle="340" angle_width="15" colour="AliceBlue" percentage="99" detailed_text="test1"/>
+            <local:PieShape radius="100" starting_angle="315" angle_width="45" colour="Beige" percentage="99" detailed_text="test1"/>-->
         </Canvas>
     </Grid>
 </UserControl>

@@ -105,12 +105,15 @@ namespace FinanceSummary.Import
                         
 
                         temp.Category = DatabaseAccess.find_company_category(temp.TransactionCompany, purchasetype);
+                        temp.company = DatabaseAccess.find_company(temp.TransactionCompany);
                         imported_transactions.Add(temp);
                         //values will be an array of strings I think?
                     }
                     //need to marshall into the correct data format
                 }
                 DatabaseAccess.bulk_add_transaction(imported_transactions);
+                this.DialogResult = true;
+                this.Close();
             }
             
             else
@@ -163,6 +166,12 @@ namespace FinanceSummary.Import
         {
             string[] values = input_string.Split("-");
             return values[1];
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            this.Close();
         }
     }
 }

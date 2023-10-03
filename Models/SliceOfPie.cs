@@ -54,6 +54,8 @@ namespace FinanceSummary.Models
 
         public string detailed_text { get; set; }
 
+        public bool Selected { get; set; } = false;
+
         private bool IsMouseOver;
 
         private Point TextPoint;
@@ -65,14 +67,26 @@ namespace FinanceSummary.Models
             get
             {
                 double angle_w = angle_width;
-                double angle = IsMouseOver ? starting_angle - 5 : starting_angle;
-                double used_radius = IsMouseOver ? radius * 1.2 : radius;
-                if (IsMouseOver)
-                { 
-                    if (angle_width > 350)
-                        angle_w = 360;
-                    else
-                        angle_w = IsMouseOver ? angle_width + 10 : angle_width;
+                double angle = starting_angle;
+                double used_radius = radius;
+
+                if (angle_width > 355)
+                {
+                    angle_w = 355;
+                }
+                if (angle_width < 5)
+                {
+                    angle_w = 5;
+                    angle = starting_angle + angle_width - 5;
+                }
+                if (IsMouseOver || Selected)
+                {
+                    if (angle_w < 350)
+                    {
+                        angle_w = angle_w + 10;
+                        angle = angle - 5;
+                    }
+                    used_radius *= 1.2;
                 }
  
                 Point p1 = new Point(0, 0);
@@ -112,7 +126,7 @@ namespace FinanceSummary.Models
             FormattedText txt = new FormattedText(percentage, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tp, 10, Brushes.White);
             drawingContext.DrawText(txt, TextPoint);
 
-            if (IsMouseOver)
+            if (IsMouseOver || Selected)
             {
                 DetailedtextPoint = new Point((int)(radius * 1.5 * Math.Cos((starting_angle + angle_width / 2) * Math.PI / 180)), (int)(radius * 1.5 * Math.Sin((starting_angle + angle_width / 2) * Math.PI / 180)));
                 FormattedText d_text = new FormattedText(detailed_text, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, tp, 15, Brushes.White);
@@ -134,10 +148,8 @@ namespace FinanceSummary.Models
         {
             base.OnMouseEnter(e);
 
-
-
             IsMouseOver = true;
-            //Panel.SetZIndex(this, 2);
+            Panel.SetZIndex(this, 2);
             InvalidateVisual();
 
 
@@ -148,6 +160,19 @@ namespace FinanceSummary.Models
             base.OnMouseLeave(e);
             Panel.SetZIndex(this, 1);
             IsMouseOver = false;
+            InvalidateVisual();
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            Selected = !Selected;
+            UpdateSelection();
+        }
+
+        private void UpdateSelection()
+        {
             InvalidateVisual();
         }
     }

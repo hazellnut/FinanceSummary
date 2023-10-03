@@ -30,22 +30,25 @@ namespace FinanceSummary.Models
 
         public ObservableCollection<PieShape> Children { get; set; }
         public double radius { get; set; }
+
+        public PieShape SelectedChild { get; set; }
         public void ArrangeChildren()
         {
             MainCanvas.Children.Clear();
             int childCount = Children.Count;
             double angleIncrement = 360.0 / childCount;
-           
+
             for (int i = 0; i < childCount; i++)
             {
                 MainCanvas.Children.Add(Children[i]);
-                double angle = i * angleIncrement;
-                double radians = angle * (Math.PI / 180.0);
-                double x = MainCanvas.ActualWidth / 2;
-                double y = MainCanvas.ActualHeight / 2;
+                //    double angle = i * angleIncrement;
+                //    double radians = angle * (Math.PI / 180.0);
+                //    double x = MainCanvas.ActualWidth / 2;
+                //    double y = MainCanvas.ActualHeight / 2;
 
-                Canvas.SetLeft(Children[i], x);
-                Canvas.SetTop(Children[i], y);
+                Canvas.SetLeft(Children[i], radius*1.5);
+                Canvas.SetTop(Children[i], radius*1.5);
+                //}
             }
         }
     }
