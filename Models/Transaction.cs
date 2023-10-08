@@ -34,6 +34,8 @@ namespace FinanceSummary.Models
         public Company company { get; set; }
 
 
+        public bool JustUpdated { get; set; }
+
         public Transaction()
         {
 

@@ -27,7 +27,7 @@ namespace FinanceSummary.Models
             using (IDbConnection db = new MySqlConnection(ConnectionString))
             {
                 var sql = @"SELECT 
-                            * from transactions INNER JOIN accounts on (account_id = accounts.id) INNER JOIN companies on (company =idcompany)";
+                            * from transactions INNER JOIN accounts on (account_id = accounts.id) INNER JOIN companies on (company =idcompany);";
 
 
                 var transactions = db.Query<Transaction, Account, Company, Transaction>(sql, (trans, acc, comp) =>
@@ -36,7 +36,7 @@ namespace FinanceSummary.Models
                     trans.company = comp;
                     return trans;
 
-                }, splitOn: "company,id");
+                }, splitOn: "company,idcompany");
                 return transactions;
             }
         }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinanceSummary.Input"
         mc:Ignorable="d"
-        Title="keywordinput" Height="50" Width="300">
+        Title="keywordinput" Height="100" Width="400">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
